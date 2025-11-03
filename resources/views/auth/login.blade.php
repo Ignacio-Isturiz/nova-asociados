@@ -69,7 +69,9 @@
             {{-- eye icon (decorativo) --}}
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z"/><circle cx="12" cy="12" r="3"/></svg>
           </div>
-          @error('password') <span class="hint">{{ $message }}</span> @enderror
+          @if (isset($errors) && $errors->has('email'))
+    <span class="hint">{{ $errors->first('email') }}</span>
+@endif
         </div>
 
         @if (Route::has('password.request'))
