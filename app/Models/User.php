@@ -55,4 +55,9 @@ class User extends Authenticatable
     {
         return $this->role === 'usuario';
     }
+
+    public function citas()
+{
+    return $this->hasMany(\App\Models\Cita::class);
+}
 }

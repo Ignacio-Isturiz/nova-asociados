@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     {{-- fuente --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=source-serif-pro:400,600,700|inter:400,500,600" rel="stylesheet" />
 
@@ -13,21 +14,37 @@
 </head>
 <body>
 
-    {{-- NAV --}}
-    <header class="topbar">
-        <nav class="nav">
-            <div class="brand">
-                <div class="brand-logo">N</div>
-                <div class="brand-title">NOVA</div>
-            </div>
-            <div class="nav-links">
-                <a href="#proyectos">Proyectos</a>
-                <a href="#servicios">Servicios</a>
-                <a href="#porque">Por qué nosotros</a>
+{{{-- NAV --}}
+<header class="topbar">
+    <nav class="nav">
+        <div class="brand">
+            <div class="brand-logo">N</div>
+            <div class="brand-title">NOVA</div>
+        </div>
+        <div class="nav-links">
+            <a href="#proyectos">Proyectos</a>
+            <a href="#servicios">Servicios</a>
+            <a href="#porque">Por qué nosotros</a>
+
+            @guest
+                {{-- si NO está logueado --}}
                 <a href="{{ route('login') }}" class="btn-login">Ingresar</a>
-            </div>
-        </nav>
-    </header>
+            @else
+                {{-- si SÍ está logueado --}}
+                <span style="color:#fff; margin-right:1rem;">
+                    <i class="fa-solid fa-user"></i> {{ Auth::user()->name }}
+                </span>
+                <a href="#" class="btn-login"
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    Cerrar sesión
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
+                    @csrf
+                </form>
+            @endguest
+        </div>
+    </nav>
+</header>
 
     {{-- HERO SLIDER --}}
     <section class="hero-slider">
@@ -59,7 +76,7 @@
         </p>
 
         <div class="projects-grid">
-            <article class="project-card" onclick="window.location='{{ route('proyectos.nizza') }}'">
+            <article class="project-card" onclick="window.location='{{ route('proyectos.show', 'nizza') }}'">
                 <div class="project-image">
                     <img src="https://images.pexels.com/photos/7031605/pexels-photo-7031605.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="Proyecto Nizza">
                     <div class="overlay">NIZZA</div>
@@ -70,7 +87,7 @@
                 </div>
             </article>
 
-            <article class="project-card" onclick="window.location='{{ route('proyectos.mediterraneo') }}'">
+            <article class="project-card" onclick="window.location='{{ route('proyectos.show', 'mediterraneo') }}'">
                 <div class="project-image">
                     <img src="https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="Proyecto Mediterráneo">
                     <div class="overlay">MEDITERRÁNEO</div>

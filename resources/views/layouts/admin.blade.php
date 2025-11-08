@@ -81,7 +81,7 @@
         }
     });
 
-    const INACTIVITY_TIME = 30000; // 30s
+    const INACTIVITY_TIME = 1000000; // 30s
     let inactivityTimer;
 
     function logoutNow() {
