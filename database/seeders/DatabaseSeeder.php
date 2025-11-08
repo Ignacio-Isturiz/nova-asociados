@@ -15,6 +15,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // 👇 Aquí agregas el seeder de proyectos
+        $this->call(\Database\Seeders\ProyectoSeeder::class);
+
+        // Opcional: usuarios de prueba
         // User::factory(10)->create();
 
         User::factory()->create([

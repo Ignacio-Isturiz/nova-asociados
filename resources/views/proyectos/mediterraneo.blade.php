@@ -1,10 +1,13 @@
+{{-- resources/views/proyectos/mediterraneo.blade.php --}}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Mediterráneo - Proyecto | NOVA</title>
+    <title>Mediterráneo | NOVA</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    {{-- iconos --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=source-serif-pro:400,600,700|inter:400,500,600" rel="stylesheet" />
 
@@ -51,38 +54,45 @@
 
         /* HERO */
         .hero{
+            margin-top:70px;
             position:relative;
-            height:100vh;
-            background:url('https://images.pexels.com/photos/7031605/pexels-photo-7031605.jpeg?auto=compress&cs=tinysrgb&w=1600') center/cover no-repeat;
+            height:340px;
+            overflow:hidden;
+        }
+        .hero img{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            filter:brightness(.55);
+        }
+        .hero-overlay{
+            position:absolute;
+            inset:0;
             display:flex;
             align-items:center;
             justify-content:center;
+            flex-direction:column;
             color:#fff;
+            text-align:center;
         }
-        .hero::after{
-            content:"";position:absolute;inset:0;
-            background:linear-gradient(to bottom,rgba(0,0,0,.3),rgba(0,0,0,.7));
+        .hero-overlay h1{
+            font-size:3rem;
+            font-weight:700;
+            text-shadow:0 2px 6px rgba(0,0,0,.4);
         }
-        .hero-content{
-            position:relative;z-index:2;text-align:center;max-width:600px;padding:0 1rem;
-            text-shadow:0 4px 15px rgba(0,0,0,0.6);
-        }
-        .hero h1{
-            font-family:"Source Serif Pro",serif;
-            font-size:5rem;letter-spacing:2px;margin-bottom:1rem;
-        }
-        .hero p{
-            font-size:1.2rem;line-height:1.6;
+        .hero-overlay p{
+            margin-top:.4rem;
+            font-size:1.1rem;
         }
 
-        /* SECCIÓN DETALLE */
+        /* DETALLE */
         .detalle{
             display:grid;
             grid-template-columns:1fr 1fr;
-            gap:3rem;
+            gap:2.5rem;
             max-width:1180px;
-            margin:5rem auto;
-            align-items:center;
+            margin:3.5rem auto 4.5rem auto;
+            align-items:stretch;
             padding:0 1.5rem;
         }
         .detalle-texto{
@@ -93,68 +103,125 @@
         }
         .detalle-texto h2{
             font-family:"Source Serif Pro",serif;
-            font-size:2rem;
+            font-size:2.1rem;
             color:var(--brand);
-            margin-bottom:1rem;
-        }
-        .detalle-texto ul{
-            list-style:none;
-            margin:1rem 0;
-            padding:0;
-        }
-        .detalle-texto ul li{
-            margin-bottom:.6rem;
-            color:var(--ink);
-        }
-        .detalle-texto strong{
-            color:var(--brand);
+            margin-bottom:1.4rem;
         }
         .detalle-botones{
             display:flex;
             flex-wrap:wrap;
             gap:1rem;
-            margin-top:1.5rem;
+            margin-bottom:1.4rem;
         }
-        .btn{
+        .btn-pill{
+            display:inline-flex;
+            align-items:center;
+            gap:.4rem;
+            background:#fff;
             border:2px solid var(--brand);
-            border-radius:12px;
-            padding:.7rem 1.4rem;
+            color:var(--brand);
+            padding:.6rem 1.2rem;
+            border-radius:14px;
             font-weight:600;
             text-decoration:none;
-            color:var(--brand);
-            transition:all .2s;
         }
-        .btn:hover{
+        .detalle-texto ul{
+            list-style:none;
+            margin:1rem 0 1.4rem 0;
+        }
+        .detalle-texto ul li{
+            margin-bottom:.55rem;
+        }
+        .btn-agendar{
+            display:inline-block;
             background:var(--brand);
             color:#fff;
-        }
-        .btn-brand{
-            background:var(--brand);
-            color:#fff;
-        }
-        .detalle-imagen{
-            background:#f8f8f8;
-            border-radius:20px;
-            height:400px;
-            display:grid;
-            place-items:center;
-            color:#bbb;
-            font-size:1rem;
-            border:2px dashed #ccc;
+            padding:.7rem 1.35rem;
+            border-radius:12px;
+            font-weight:600;
+            text-decoration:none;
         }
 
-        /* FOOTER */
+        .detalle-imagen{
+            background:#f3f3f3;
+            border:2px dashed #d2d2d2;
+            border-radius:20px;
+            display:grid;
+            place-items:center;
+            color:#999;
+            font-size:1rem;
+        }
+
+        /* MODAL */
+        .modal-backdrop{
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,.45);
+            display:none;
+            align-items:center;
+            justify-content:center;
+            z-index:200;
+        }
+        .modal-card{
+            background:#fff;
+            width:90%;
+            max-width:460px;
+            border-radius:18px;
+            padding:1.3rem 1.4rem 1.5rem 1.4rem;
+            box-shadow:0 10px 40px rgba(0,0,0,.15);
+        }
+        .modal-card h3{
+            margin-bottom:1rem;
+            font-size:1.15rem;
+        }
+        .modal-close{
+            border:none;
+            background:transparent;
+            font-size:1.2rem;
+            cursor:pointer;
+        }
+        .form-control{
+            width:100%;
+            padding:.55rem .6rem;
+            border:1px solid #ddd;
+            border-radius:10px;
+        }
+        .btn-primary{
+            background:var(--brand);
+            color:#fff;
+            border:none;
+            padding:.6rem 1rem;
+            border-radius:10px;
+            font-weight:600;
+            cursor:pointer;
+            width:100%;
+        }
+
+        /* alertas */
+        .alert-success{
+            background:#d1fae5;
+            color:#065f46;
+            padding:.6rem 1rem;
+            text-align:center;
+        }
+        .alert-error{
+            background:#fee2e2;
+            color:#b91c1c;
+            padding:.6rem 1rem;
+            text-align:center;
+        }
+
         footer{
             background:#171413;
             color:#fff;
-            padding:3rem 1.5rem;
             text-align:center;
-            margin-top:4rem;
+            padding:2.6rem 1rem;
         }
-        footer p{color:rgba(255,255,255,.6);}
+
         @media(max-width:900px){
             .detalle{grid-template-columns:1fr;}
-            .hero h1{font-size:3.5rem;}
+            .hero{height:280px;}
+            .hero-overlay h1{font-size:2.4rem;}
         }
     </style>
 </head>
@@ -169,24 +236,51 @@
         <div class="nav-links">
             <a href="{{ url('/') }}">Inicio</a>
             <a href="{{ url('/#proyectos') }}">Proyectos</a>
-            <a href="{{ route('login') }}">Ingresar</a>
+
+            @guest
+                <a href="{{ route('login') }}">Ingresar</a>
+            @else
+                <span style="color:#fff; margin-left:1.5rem;">
+                    <i class="fa-solid fa-user"></i> {{ Auth::user()->name }}
+                </span>
+                <a href="#"
+                   onclick="event.preventDefault(); document.getElementById('logout-form-proyecto').submit();"
+                   style="margin-left:1.5rem;">
+                    Cerrar sesión
+                </a>
+                <form id="logout-form-proyecto" action="{{ route('logout') }}" method="POST" style="display:none;">
+                    @csrf
+                </form>
+            @endguest
         </div>
     </nav>
 </header>
 
+{{-- alertas --}}
+@if(session('success'))
+    <div class="alert-success">{{ session('success') }}</div>
+@endif
+@if(session('error'))
+    <div class="alert-error">{{ session('error') }}</div>
+@endif
+
+{{-- HERO --}}
 <section class="hero">
-    <div class="hero-content">
-        <h1>MEDITERRÁNEO</h1>
-        <p>Vive la elegancia y tranquilidad en El Retiro, rodeado de naturaleza con diseño contemporáneo.</p>
+    <img src="{{ asset($proyecto->imagen ?? 'images/proyectos/mediterraneo.jpg') }}" alt="{{ $proyecto->nombre }}">
+    <div class="hero-overlay">
+        <h1>{{ $proyecto->nombre ?? 'Mediterráneo' }}</h1>
+        <p>{{ $proyecto->descripcion ?? 'Proyecto inmobiliario exclusivo.' }}</p>
     </div>
 </section>
 
+{{-- CONTENIDO --}}
 <section class="detalle">
     <div class="detalle-texto">
         <h2>Características principales</h2>
+
         <div class="detalle-botones">
-            <a href="#" class="btn">📍 Llega con Waze</a>
-            <a href="#" class="btn">🗺️ Llega con Maps</a>
+            <a class="btn-pill" href="https://waze.com/ul?ll=6.140,-75.380&navigate=yes" target="_blank">📍 Llega con Waze</a>
+            <a class="btn-pill" href="https://maps.google.com/?q=Medellin" target="_blank">🗺️ Llega con Maps</a>
         </div>
 
         <ul>
@@ -197,20 +291,25 @@
             <li>✓ Vista natural y zonas verdes</li>
         </ul>
 
-        <p><strong>Áreas desde:</strong> 140 m²</p>
-        <p><strong>Precio desde:</strong> $1.890 millones</p>
+        <p><strong>Áreas desde:</strong> {{ $proyecto->area ?? '180 m²' }}</p>
+        <p><strong>Precio desde:</strong> {{ $proyecto->precio ?? '$ 1.890 millones' }}</p>
 
-        <a href="#" class="btn btn-brand">AGENDAR VISITA</a>
+        <a href="javascript:void(0);" class="btn btn-brand"
+           onclick="document.getElementById('modal-cita-{{ $proyecto->id }}').style.display='flex'">
+            AGENDAR VISITA
+        </a>
     </div>
 
     <div class="detalle-imagen">
-        <p>📷 Espacio reservado para galería dinámica</p>
+        📷 Espacio reservado para galería dinámica
     </div>
 </section>
 
+
 <footer>
-    <p>© 2025 NOVA — Todos los derechos reservados.</p>
+    <p>© {{ date('Y') }} NOVA — Todos los derechos reservados.</p>
 </footer>
 
+@include('proyectos.partials.cita-modal', ['proyecto' => $proyecto])
 </body>
 </html>
