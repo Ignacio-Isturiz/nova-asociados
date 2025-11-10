@@ -3,23 +3,28 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class InactivityMiddleware
 {
-    // Tiempo máximo de inactividad (segundos)
-    protected int $timeout = 30; // o 900 (15 min)
+    protected int $timeout;
+
+    public function __construct()
+    {
+        // Lee de .env y si no, default 300s
+        $this->timeout = (int) env('INACTIVITY_TIMEOUT_SECONDS', 300);
+    }
 
     public function handle(Request $request, Closure $next): Response
     {
-        // Solo aplica si hay usuario logueado
         if (Auth::check()) {
-            $lastActivity = session('last_activity_time');
+            $last = Session::get('last_activity_time'); // timestamp (int)
+            $now  = time();
 
-            // Si ya existe un registro previo y el tiempo se excedió
-            if (!is_null($lastActivity) && (time() - $lastActivity) > $this->timeout) {
+            if (!is_null($last) && ($now - $last) > $this->timeout) {
                 Auth::logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
@@ -32,10 +37,9 @@ class InactivityMiddleware
         /** @var \Symfony\Component\HttpFoundation\Response $response */
         $response = $next($request);
 
-        // ✅ Actualiza el timestamp DESPUÉS de procesar la petición,
-        // para evitar conflictos durante redirecciones o doble refresh
+        // Actualiza el timestamp al finalizar la petición
         if (Auth::check()) {
-            session(['last_activity_time' => time()]);
+            Session::put('last_activity_time', time());
         }
 
         return $response;
