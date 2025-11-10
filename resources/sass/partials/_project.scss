@@ -1,0 +1,97 @@
+.project-hero {
+  position: relative;
+  height: 360px;
+  background-size: cover;
+  background-position: center;
+}
+.project-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,.15), rgba(0,0,0,.55));
+}
+.project-hero__content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 3px 10px rgba(0,0,0,.35);
+}
+.project-hero__content h1 {
+  font-size: 3rem;
+  margin-bottom: .4rem;
+}
+.project-body {
+  max-width: 1180px;
+  margin: 3rem auto 4rem;
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 3rem;
+  padding: 0 1.5rem;
+}
+.project-body__left {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.05);
+}
+.project-body__right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.project-image {
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.08);
+  object-fit: cover;
+}
+.project-title {
+  font-size: 2.1rem;
+  margin-bottom: 1.4rem;
+}
+.project-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.4rem;
+}
+.btn-outline {
+  border: 2px solid #a34700;
+  background: #fff;
+  padding: .6rem 1.3rem;
+  border-radius: 14px;
+  font-weight: 600;
+  color: #a34700;
+}
+.btn-primary {
+  background: #a34700;
+  color: #fff;
+  border: none;
+  padding: .7rem 1.35rem;
+  border-radius: 12px;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  cursor: pointer;
+}
+.project-features {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 1.4rem;
+}
+.project-features li {
+  margin-bottom: .4rem;
+}
+
+@media (max-width: 900px) {
+  .project-body {
+    grid-template-columns: 1fr;
+  }
+  .project-hero {
+    height: 280px;
+  }
+}
