@@ -14,11 +14,18 @@
             <button type="button" onclick="document.getElementById('{{ $modalId }}').style.display='none'">✕</button>
         </div>
 
+        <!-- Alerta de error (si existe) -->
         @if(session('error'))
-            <div class="alert alert-error">{{ session('error') }}</div>
+            <div class="alert alert-error">
+                {{ session('error') }}
+            </div>
         @endif
+
+        <!-- Alerta de éxito (si existe) -->
         @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
         @endif
 
         <form action="{{ route('citas.store') }}" method="POST">
@@ -58,3 +65,57 @@
         </form>
     </div>
 </div>
+
+<!-- Estilos CSS para las animaciones de éxito y error -->
+<style>
+    .alert {
+        padding: 15px;
+        border-radius: 5px;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .alert-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .alert-error {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    /* Animación de fade-in para los mensajes */
+    .alert {
+        animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+</style>
+
+<!-- Script para mostrar el modal de éxito o error -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Verifica si hay un mensaje de éxito
+        @if(session('success'))
+            setTimeout(function() {
+                alert('¡Cita agendada con éxito!');
+                document.getElementById('{{ $modalId }}').style.display = 'none'; // Cierra el modal
+            }, 2000);
+        @endif
+
+        // Verifica si hay un mensaje de error
+        @if(session('error'))
+            setTimeout(function() {
+                alert('{{ session('error') }}');
+            }, 2000);
+        @endif
+    });
+</script>

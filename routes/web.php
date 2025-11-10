@@ -22,6 +22,19 @@ Route::middleware('auth')->group(function () {
     // guardar cita
     Route::post('/citas', [CitaController::class, 'store'])
         ->name('citas.store');
+
+    // ver mis citas
+    Route::get('/mis-citas', [CitaController::class, 'misCitas'])->name('citas.mis');
+    
+    // Cancelar cita
+    Route::delete('citas/{cita}/cancelar', [CitaController::class, 'cancelar'])->name('citas.cancelar');
+
+    // Editar cita (formulario)
+    Route::get('/citas/{cita}/editar', [CitaController::class, 'edit'])->name('citas.edit');
+
+    // Actualizar cita
+    Route::put('/citas/{cita}', [CitaController::class, 'update'])->name('citas.update');
+    
 });
 
 // 🔹 AUTENTICACIÓN
@@ -33,6 +46,8 @@ Route::middleware(['auth', 'role:admin'])
     ->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
         Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('admin.profile.avatar');
+        //para ver todas las citas
+        // Route::middleware('role:admin')->get('/admin/citas', [CitaController::class, 'todasCitas'])->name('admin.citas');
     });
 
 

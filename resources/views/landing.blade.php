@@ -34,14 +34,22 @@
                 <span style="color:#fff; margin-right:1rem;">
                     <i class="fa-solid fa-user"></i> {{ Auth::user()->name }}
                 </span>
+
+                {{-- Link a Mis Citas --}}
+                @auth
+                    <a href="{{ route('citas.mis') }}" class="btn-login">Mis citas</a>
+                @endauth
+
+
                 <a href="#" class="btn-login"
-                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     Cerrar sesión
                 </a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
                     @csrf
                 </form>
-            @endguest
+@endguest
+
         </div>
     </nav>
 </header>
