@@ -18,8 +18,8 @@
                     <i class="fa-solid fa-user"></i> {{ Auth::user()->name }}
                 </span>
                 <a href="#"
-                   class="btn-login"
-                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                class="btn-login"
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     Cerrar sesión
                 </a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
