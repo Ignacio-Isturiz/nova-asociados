@@ -1,0 +1,48 @@
+.topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(34, 34, 34, .95);
+    backdrop-filter: blur(6px);
+  }
+  
+  .nav {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+  }
+  
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+  }
+  
+  .brand-logo {
+    width: 46px;
+    height: 46px;
+    border-radius: 999px;
+    background: #fff;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    color: var(--brand);
+    font-size: 1.4rem;
+  }
+  
+  .brand-title {
+    font-family: "Source Serif Pro", serif;
+    color: #fff;
+    font-size: 1.4rem;
+  }
+  
+  .nav-links a {
+    text-decoration: none;
+    color: #fff;
+    margin-left: 1.5rem;
+    font-weight: 500;
+  }
+  

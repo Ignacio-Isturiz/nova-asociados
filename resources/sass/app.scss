@@ -1,6 +1,11 @@
 @use 'variables' as *;
 
 @import url('https://fonts.bunny.net/css?family=Nunito');
+@import "partials/variables";
+@import "partials/navbar-nova";
+@import "partials/footer-nova";
+@import "partials/project";
+@import "partials/cita-modal";
 
 // luego el resto de tu código, si lo hay
 body {
