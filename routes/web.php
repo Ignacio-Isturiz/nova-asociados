@@ -2,13 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\CitaController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Admin\CitaAdminController;
-use App\Http\Controllers\Admin\UserAdminController;
+use App\Livewire\Admin\Users\Index as UsersIndex;
+
+Route::middleware(['web','auth', 'verified'])->group(function () {
+    Route::get('/admin/users', UsersIndex::class)->name('admin.users');
+});
+
 
 // LANDING PRINCIPAL
 Route::get('/', function () {
