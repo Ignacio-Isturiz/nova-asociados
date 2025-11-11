@@ -31,8 +31,28 @@
         </div>
 
         <ul class="sidebar-menu">
-            <li><a href="{{ route('admin.dashboard') }}" class="active">Dashboard</a></li>
-            {{-- más enlaces --}}
+          <li>
+            <a href="{{ route('admin.dashboard') }}"
+               class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+              Dashboard
+            </a>
+          </li>
+          <li>
+            {{-- IMPORTANTE: fragment=1 y data-partial --}}
+            <a href="{{ route('admin.citas.index', ['fragment' => 1]) }}"
+               data-partial
+               data-target="#admin-dynamic"
+               class="{{ request()->routeIs('admin.citas.*') ? 'active' : '' }}">
+              Citas
+            </a>
+          </li>
+          <li>
+            <a href="{{ route('admin.users.index', ['fragment' => 1]) }}"
+               data-partial
+               data-target="#admin-dynamic">
+               Usuarios
+            </a>
+          </li>
         </ul>
     </aside>
 
@@ -106,13 +126,6 @@
     });
 
     resetTimer();
-
-    // intentar cerrar al cerrar pestaña
-    window.addEventListener('beforeunload', () => {
-        const fd = new FormData();
-        fd.append('_token', "{{ csrf_token() }}");
-        navigator.sendBeacon("{{ route('logout') }}", fd);
-    });
 </script>
 
 @stack('scripts')

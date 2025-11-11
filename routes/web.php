@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\CitaController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Admin\CitaAdminController;
+use App\Http\Controllers\Admin\UserAdminController;
 
 // LANDING PRINCIPAL
 Route::get('/', function () {
@@ -43,11 +45,22 @@ Auth::routes();
 // 🔹 RUTAS ADMIN
 Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
+    ->as('admin.')              // 👈 solo una vez aquí
     ->group(function () {
-        Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
-        Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('admin.profile.avatar');
-        //para ver todas las citas
-        // Route::middleware('role:admin')->get('/admin/citas', [CitaController::class, 'todasCitas'])->name('admin.citas');
+        Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])
+            ->name('dashboard'); // => admin.dashboard
+
+        Route::get('/citas', [\App\Http\Controllers\Admin\CitaAdminController::class, 'index'])
+            ->name('citas.index'); // => admin.citas.index
+        Route::get('/citas/data', [\App\Http\Controllers\Admin\CitaAdminController::class, 'data'])
+            ->name('citas.data');  // => admin.citas.data
+
+        Route::get('/usuarios', [\App\Http\Controllers\Admin\UserAdminController::class, 'index'])
+            ->name('users.index'); // => admin.users.index
+        Route::get('/usuarios/data', [\App\Http\Controllers\Admin\UserAdminController::class, 'data'])
+            ->name('users.data');  // => admin.users.data
+        Route::post('/profile/avatar', [\App\Http\Controllers\Admin\ProfileController::class, 'updateAvatar'])
+            ->name('profile.avatar');
     });
 
 Route::get('/mis-citas', [\App\Http\Controllers\CitaController::class, 'misCitas'])
