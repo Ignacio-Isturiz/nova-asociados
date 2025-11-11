@@ -4,7 +4,11 @@
   <meta charset="UTF-8">
   <title>{{ $title ?? View::getSection('title') ?? 'Panel de administración' }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  @vite(['resources/sass/admin.scss', 'resources/js/app.js'])
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+
+  {{-- CSS: Bootstrap (vía tu SCSS) + estilos del panel --}}
+  @vite('resources/sass/admin.scss')
+
   @livewireStyles
   @stack('styles')
 </head>
@@ -35,14 +39,15 @@
           Dashboard
         </a>
       </li>
+
       <li>
-        <a href="{{ route('admin.citas.index', ['fragment' => 1]) }}"
-           data-partial
-           data-target="#admin-dynamic"
+        {{-- Importante: enlace directo (sin data-partial) para no desmontar Livewire --}}
+        <a href="{{ route('admin.citas.index') }}"
            class="{{ request()->routeIs('admin.citas.*') ? 'active' : '' }}">
           Citas
         </a>
       </li>
+
       <li>
         <a href="{{ route('admin.users') }}"
            class="{{ request()->routeIs('admin.users') ? 'active' : '' }}">
@@ -76,20 +81,26 @@
     </header>
 
     <main class="admin-main">
-      @yield('content')   {{-- vistas blade clásicas --}}
-      {{ $slot ?? '' }}   {{-- page components de Livewire --}}
+      {{-- Blade clásico --}}
+      @yield('content')
+      {{-- Livewire page components --}}
+      {{ $slot ?? '' }}
     </main>
   </div>
 </div>
 
 <script>
+  // Dropdown usuario
   const btn = document.getElementById('userMenuBtn');
   const dropdown = document.getElementById('userDropdown');
   if (btn) btn.addEventListener('click', () => dropdown.classList.toggle('show'));
   document.addEventListener('click', (e) => {
-    if (!btn.contains(e.target) && !dropdown.contains(e.target)) dropdown.classList.remove('show');
+    if (btn && dropdown && !btn.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.classList.remove('show');
+    }
   });
 
+  // Auto-logout por inactividad (ajusta INACTIVITY_TIME según necesites)
   const INACTIVITY_TIME = 1000000;
   let inactivityTimer;
   function logoutNow() {
@@ -99,14 +110,19 @@
     }).then(() => { window.location.href = "{{ route('login') }}"; });
   }
   function resetTimer() { clearTimeout(inactivityTimer); inactivityTimer = setTimeout(logoutNow, INACTIVITY_TIME); }
-  ['mousemove','keydown','click','scroll','touchstart'].forEach(evt => document.addEventListener(evt, resetTimer, {passive:true}));
+  ['mousemove','keydown','click','scroll','touchstart'].forEach(evt =>
+    document.addEventListener(evt, resetTimer, {passive:true})
+  );
   resetTimer();
 </script>
 
-{{-- ⬇️ Zona global de modales: al final del <body> --}}
+{{-- Zona de modales global (si alguna vista los usa) --}}
 <div id="modal-root"></div>
 @yield('modals')
 @stack('modals')
+
+{{-- JS: carga al final para no interferir con Livewire --}}
+@vite('resources/js/app.js')
 
 @livewireScripts
 @stack('scripts')
