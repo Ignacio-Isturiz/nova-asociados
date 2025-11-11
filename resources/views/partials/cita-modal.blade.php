@@ -66,39 +66,6 @@
     </div>
 </div>
 
-<!-- Estilos CSS para las animaciones de éxito y error -->
-<style>
-    .alert {
-        padding: 15px;
-        border-radius: 5px;
-        text-align: center;
-        margin-bottom: 15px;
-    }
-
-    .alert-success {
-        background-color: #28a745;
-        color: white;
-    }
-
-    .alert-error {
-        background-color: #dc3545;
-        color: white;
-    }
-
-    /* Animación de fade-in para los mensajes */
-    .alert {
-        animation: fadeIn 0.5s ease-out forwards;
-    }
-
-    @keyframes fadeIn {
-        0% {
-            opacity: 0;
-        }
-        100% {
-            opacity: 1;
-        }
-    }
-</style>
 
 <!-- Script para mostrar el modal de éxito o error -->
 <script>

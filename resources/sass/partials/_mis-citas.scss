@@ -1,0 +1,73 @@
+/* Mis Citas — estilos de la vista */
+
+/* wrapper de la página (reemplaza el style inline del container) */
+.mis-citas-page {
+    margin-top: 6rem;
+    min-height: calc(100vh - 6rem);
+  }
+  
+  /* tabla con borde redondeado + sombra */
+  .table-citas {
+    border-collapse: separate;   /* necesario para bordes redondeados */
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  
+  /* cabecera gris sólida centrada */
+  .mis-citas-page .table-citas thead.table-dark th {
+    background: var(--slate-700) !important;
+    color: #fff !important;
+    border-color: transparent !important;
+    font-weight: 700;
+    letter-spacing: .3px;
+    padding: 16px 24px !important;
+    text-align: center;
+    vertical-align: middle;
+  }
+  
+  /* bordes verticales entre celdas */
+  .mis-citas-page .table-citas td,
+  .mis-citas-page .table-citas th {
+    border-left: 1px solid var(--slate-200);
+    border-right: 1px solid var(--slate-200);
+  }
+  
+  /* acciones en fila */
+  .td-acciones {
+    display: flex;
+    justify-content: center;
+    gap: .5rem;
+  }
+  
+  /* botón base suave */
+  .btn-fixed {
+    background: var(--blue-50);
+    color: var(--blue-600);
+    border: 1px solid rgba(37, 99, 235, .25);
+  }
+  
+  /* botón cancelar (reemplaza el style inline rojo del botón) */
+  .btn-cancelar {
+    background-color: rgba(220, 38, 38, 0.1) !important;
+    border-color: var(--red-600) !important;
+    color: #000 !important;
+  }
+  
+  /* texto cuando no hay acciones */
+  .sin-acciones {
+    color: #64748b;
+    font-style: italic;
+  }
+  
+  /* modales (estética consistente) */
+  .modal-content {
+    border-radius: .75rem;
+    box-shadow: var(--shadow);
+  }
+  
+  .modal-header.bg-primary,
+  .modal-header.bg-danger {
+    color: #fff;
+  }
+  

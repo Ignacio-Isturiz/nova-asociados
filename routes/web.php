@@ -50,7 +50,12 @@ Route::middleware(['auth', 'role:admin'])
         // Route::middleware('role:admin')->get('/admin/citas', [CitaController::class, 'todasCitas'])->name('admin.citas');
     });
 
+Route::get('/mis-citas', [\App\Http\Controllers\CitaController::class, 'misCitas'])
+    ->name('citas.mis');
 
+// feed de eventos para FullCalendar
+Route::get('/citas/events', [\App\Http\Controllers\CitaCalendarController::class, 'events'])
+    ->name('citas.events');
 
 // 🔹 HOME (solo para usuarios)
 Route::middleware(['auth', 'role:usuario'])
