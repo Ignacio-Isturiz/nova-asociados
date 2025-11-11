@@ -8,7 +8,7 @@
 
     {{-- HERO DEL PROYECTO --}}
     <section class="project-hero"
-             style="background-image: url('{{ asset(trim($__env->yieldContent('hero-image', $proyecto->imagen ?? 'images/proyectos/default.jpg'))) }}');">
+            style="background-image: url('{{ asset(trim($__env->yieldContent('hero-image', $proyecto->imagen ?? 'images/proyectos/default.jpg'))) }}');">
         <div class="project-hero__overlay"></div>
         <div class="project-hero__content">
             <h1>{{ $proyecto->nombre ?? 'Proyecto inmobiliario' }}</h1>

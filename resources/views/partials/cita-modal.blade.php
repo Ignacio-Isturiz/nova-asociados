@@ -14,11 +14,18 @@
             <button type="button" onclick="document.getElementById('{{ $modalId }}').style.display='none'">✕</button>
         </div>
 
+        <!-- Alerta de error (si existe) -->
         @if(session('error'))
-            <div class="alert alert-error">{{ session('error') }}</div>
+            <div class="alert alert-error">
+                {{ session('error') }}
+            </div>
         @endif
+
+        <!-- Alerta de éxito (si existe) -->
         @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
         @endif
 
         <form action="{{ route('citas.store') }}" method="POST">
@@ -58,3 +65,24 @@
         </form>
     </div>
 </div>
+
+
+<!-- Script para mostrar el modal de éxito o error -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Verifica si hay un mensaje de éxito
+        @if(session('success'))
+            setTimeout(function() {
+                alert('¡Cita agendada con éxito!');
+                document.getElementById('{{ $modalId }}').style.display = 'none'; // Cierra el modal
+            }, 2000);
+        @endif
+
+        // Verifica si hay un mensaje de error
+        @if(session('error'))
+            setTimeout(function() {
+                alert('{{ session('error') }}');
+            }, 2000);
+        @endif
+    });
+</script>
