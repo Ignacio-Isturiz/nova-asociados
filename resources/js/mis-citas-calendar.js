@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     slotMinTime: '08:00:00',
     slotMaxTime: '18:00:00',
-    initialScrollTime: '08:00:00',
+    scrollTime: '08:00:00',
     height: 'auto',
     expandRows: true,
 
@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
       endTime: '18:00',
     },
 
+    // reemplaza temporalmente "events: '/citas/events'," por:
     events: '/citas/events',
     eventTimeFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
 

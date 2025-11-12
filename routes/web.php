@@ -11,6 +11,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\CitaPdfController;
+use App\Http\Controllers\Admin\CitaStatsController;
 
 use App\Livewire\Admin\Users\Index as UsersIndex;
 use App\Livewire\Admin\Citas\Index as CitasIndex;
@@ -65,4 +66,11 @@ Route::middleware(['auth','verified','role:admin'])
 
         // Exportación PDF
         Route::get('/citas/export/pdf', [CitaPdfController::class, 'export'])->name('citas.export.pdf');
+
+        // Estadísticas de Citas (vista + endpoint JSON)
+        Route::get('/citas/stats', [CitaStatsController::class, 'index'])
+            ->name('citas.stats');
+
+        Route::get('/citas/stats/data', [CitaStatsController::class, 'data'])
+            ->name('citas.stats.data');
     });
