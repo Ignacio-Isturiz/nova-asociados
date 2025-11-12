@@ -1,5 +1,6 @@
 /* === 1) Bootstrap primero (para que TU CSS gane) === */
 @use "bootstrap/scss/bootstrap" as *;
+@import "partials/charts";
 
 /* === 2) Base === */
 body{
