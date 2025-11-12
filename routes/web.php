@@ -2,75 +2,67 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\ProfileController;
+
 use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\CitaController;
+use App\Http\Controllers\CitaCalendarController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Admin\CitaAdminController;
-use App\Http\Controllers\Admin\UserAdminController;
 
-// LANDING PRINCIPAL
-Route::get('/', function () {
-    return view('landing');
-})->name('landing');
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\CitaPdfController;
 
-Route::middleware('auth')->group(function () {
+use App\Livewire\Admin\Users\Index as UsersIndex;
+use App\Livewire\Admin\Citas\Index as CitasIndex;
+use App\Livewire\Admin\Citas\Form  as CitasForm;
 
-    // ver proyecto
-    Route::get('/proyectos/{slug}', [ProyectoController::class, 'show'])
-        ->name('proyectos.show');
+/* Landing */
+Route::get('/', fn () => view('landing'))->name('landing');
 
-    // guardar cita
-    Route::post('/citas', [CitaController::class, 'store'])
-        ->name('citas.store');
-
-    // ver mis citas
-    Route::get('/mis-citas', [CitaController::class, 'misCitas'])->name('citas.mis');
-    
-    // Cancelar cita
-    Route::delete('citas/{cita}/cancelar', [CitaController::class, 'cancelar'])->name('citas.cancelar');
-
-    // Editar cita (formulario)
-    Route::get('/citas/{cita}/editar', [CitaController::class, 'edit'])->name('citas.edit');
-
-    // Actualizar cita
-    Route::put('/citas/{cita}', [CitaController::class, 'update'])->name('citas.update');
-    
-});
-
-// 🔹 AUTENTICACIÓN
+/* Auth */
 Auth::routes();
 
-// 🔹 RUTAS ADMIN
-Route::middleware(['auth', 'role:admin'])
-    ->prefix('admin')
-    ->as('admin.')              // 👈 solo una vez aquí
-    ->group(function () {
-        Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])
-            ->name('dashboard'); // => admin.dashboard
+/* Usuario autenticado (no admin) */
+Route::middleware(['auth'])->group(function () {
+    Route::get('/proyectos/{slug}', [ProyectoController::class, 'show'])->name('proyectos.show');
 
-        Route::get('/citas', [\App\Http\Controllers\Admin\CitaAdminController::class, 'index'])
-            ->name('citas.index'); // => admin.citas.index
-        Route::get('/citas/data', [\App\Http\Controllers\Admin\CitaAdminController::class, 'data'])
-            ->name('citas.data');  // => admin.citas.data
+    // Citas (usuario final)
+    Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
+    Route::get('/mis-citas', [CitaController::class, 'misCitas'])->name('citas.mis');
+    Route::delete('/citas/{cita}/cancelar', [CitaController::class, 'cancelar'])->name('citas.cancelar');
+    Route::get('/citas/{cita}/editar', [CitaController::class, 'edit'])->name('citas.edit');
+    Route::put('/citas/{cita}', [CitaController::class, 'update'])->name('citas.update');
 
-        Route::get('/usuarios', [\App\Http\Controllers\Admin\UserAdminController::class, 'index'])
-            ->name('users.index'); // => admin.users.index
-        Route::get('/usuarios/data', [\App\Http\Controllers\Admin\UserAdminController::class, 'data'])
-            ->name('users.data');  // => admin.users.data
-        Route::post('/profile/avatar', [\App\Http\Controllers\Admin\ProfileController::class, 'updateAvatar'])
-            ->name('profile.avatar');
-    });
+    // Calendario JSON
+    Route::get('/citas/events', [CitaCalendarController::class, 'events'])->name('citas.events');
+});
 
-Route::get('/mis-citas', [\App\Http\Controllers\CitaController::class, 'misCitas'])
-    ->name('citas.mis');
-
-// feed de eventos para FullCalendar
-Route::get('/citas/events', [\App\Http\Controllers\CitaCalendarController::class, 'events'])
-    ->name('citas.events');
-
-// 🔹 HOME (solo para usuarios)
+/* Home (rol usuario final) */
 Route::middleware(['auth', 'role:usuario'])
-    ->get('/home', [App\Http\Controllers\HomeController::class, 'index'])
+    ->get('/home', [HomeController::class, 'index'])
     ->name('home');
+
+/* Admin (Livewire) */
+Route::middleware(['auth','verified','role:admin'])
+    ->prefix('admin')
+    ->as('admin.')
+    ->group(function () {
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+        Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar');
+
+        Route::get('/users', UsersIndex::class)->name('users');
+
+        // Citas (admin)
+        Route::get('citas', CitasIndex::class)->name('citas.index');
+
+        // ¡Estática primero! (no hace model binding)
+        Route::get('citas/crear', CitasForm::class)->name('citas.create');
+
+        // Editar con ID crudo para evitar binding automático
+        Route::get('citas/{citaId}/editar', CitasForm::class)
+            ->whereNumber('citaId') // o ->whereUuid('citaId') si usas UUID
+            ->name('citas.edit');
+
+        // Exportación PDF
+        Route::get('/citas/export/pdf', [CitaPdfController::class, 'export'])->name('citas.export.pdf');
+    });

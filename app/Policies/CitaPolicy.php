@@ -7,15 +7,14 @@ use App\Models\Cita;
 
 class CitaPolicy
 {
-    // Solo el dueño puede modificar
-    public function update(User $user, Cita $cita)
+    public function before(User $user, string $ability)
     {
-        return $user->id === $cita->user_id;
+        if ($user->role === 'admin') return true; // admin todo
     }
 
-    // El dueño o el admin pueden cancelar
-    public function cancel(User $user, Cita $cita)
-    {
-        return $user->id === $cita->user_id || $user->role === 'admin';
-    }
+    public function viewAny(User $user): bool { return true; }
+    public function view(User $user, Cita $cita): bool { return $user->id === $cita->user_id; }
+    public function create(User $user): bool { return true; } // ← NECESARIO
+    public function update(User $user, Cita $cita): bool { return $user->id === $cita->user_id; }
+    public function delete(User $user, Cita $cita): bool { return $user->id === $cita->user_id; }
 }
