@@ -20,6 +20,9 @@ class Cita extends Model
         'notas',
     ];
 
+    protected $casts = [
+        'fecha' => 'date',
+    ];
     // Relaciones
     public function usuario()
     {

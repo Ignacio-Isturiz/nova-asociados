@@ -10,9 +10,11 @@ use App\Http\Controllers\HomeController;
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\CitaPdfController;
 
 use App\Livewire\Admin\Users\Index as UsersIndex;
-use App\Http\Controllers\Admin\CitaPdfController;
+use App\Livewire\Admin\Citas\Index as CitasIndex;
+use App\Livewire\Admin\Citas\Form  as CitasForm;
 
 /* Landing */
 Route::get('/', fn () => view('landing'))->name('landing');
@@ -24,12 +26,14 @@ Auth::routes();
 Route::middleware(['auth'])->group(function () {
     Route::get('/proyectos/{slug}', [ProyectoController::class, 'show'])->name('proyectos.show');
 
+    // Citas (usuario final)
     Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
     Route::get('/mis-citas', [CitaController::class, 'misCitas'])->name('citas.mis');
     Route::delete('/citas/{cita}/cancelar', [CitaController::class, 'cancelar'])->name('citas.cancelar');
     Route::get('/citas/{cita}/editar', [CitaController::class, 'edit'])->name('citas.edit');
     Route::put('/citas/{cita}', [CitaController::class, 'update'])->name('citas.update');
 
+    // Calendario JSON
     Route::get('/citas/events', [CitaCalendarController::class, 'events'])->name('citas.events');
 });
 
@@ -48,16 +52,17 @@ Route::middleware(['auth','verified','role:admin'])
 
         Route::get('/users', UsersIndex::class)->name('users');
 
-        Route::get('/citas', \App\Livewire\Admin\Citas\Index::class)->name('citas.index');
-        Route::get('/citas/create', \App\Livewire\Admin\Citas\Form::class)->name('citas.create');
-        Route::get('/citas/{cita}/edit', \App\Livewire\Admin\Citas\Form::class)
-            ->whereNumber('cita')
+        // Citas (admin)
+        Route::get('citas', CitasIndex::class)->name('citas.index');
+
+        // ¡Estática primero! (no hace model binding)
+        Route::get('citas/crear', CitasForm::class)->name('citas.create');
+
+        // Editar con ID crudo para evitar binding automático
+        Route::get('citas/{citaId}/editar', CitasForm::class)
+            ->whereNumber('citaId') // o ->whereUuid('citaId') si usas UUID
             ->name('citas.edit');
-        Route::get('/citas/export/pdf', [CitaPdfController::class, 'export'])
-            ->name('citas.export.pdf');
 
-
+        // Exportación PDF
+        Route::get('/citas/export/pdf', [CitaPdfController::class, 'export'])->name('citas.export.pdf');
     });
-
-
-

@@ -7,60 +7,72 @@ use Livewire\Attributes\Layout;
 use App\Models\Cita;
 use App\Models\User;
 use App\Models\Proyecto;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Validation\Rule;
 
 #[Layout('layouts.admin')]
 class Form extends Component
 {
-    use AuthorizesRequests;
-
+    public ?int $citaId = null;
     public ?Cita $cita = null;
     public bool $isEdit = false;
-
-    public ?int $user_id = null;
-    public ?int $proyecto_id = null;
-    public string $fecha = '';
-    public string $hora = '';
-    public string $estado = 'pendiente';
-    public ?string $telefono_contacto = null;
-    public ?string $notas = null;
 
     public $users = [];
     public $proyectos = [];
 
-    public function mount(?Cita $cita = null)
+    public $user_id, $proyecto_id, $fecha, $hora, $estado = 'pendiente', $notas;
+
+    // Recibe el parámetro de ruta {citaId}
+    public function mount($citaId = null)
     {
-        if ($cita && $cita->exists) {
-            $this->authorize('update', $cita);
-            $this->cita = $cita;
-            $this->isEdit = true;
-            $this->fill($cita->only([
-                'user_id','proyecto_id','titulo','fecha','hora','estado','telefono_contacto','notas'
-            ]));
-        } else {
-            $this->authorize('create', Cita::class);
-        }
+        $this->citaId = $citaId;
 
         $this->users = User::select('id','name')->orderBy('name')->get();
         $this->proyectos = Proyecto::select('id','nombre')->orderBy('nombre')->get();
+
+        if ($this->citaId) {
+            $this->cita   = Cita::findOrFail($this->citaId);
+            $this->isEdit = true;
+
+            $this->user_id     = $this->cita->user_id;
+            $this->proyecto_id = $this->cita->proyecto_id;
+            $this->fecha       = optional($this->cita->fecha)->format('Y-m-d');
+            $this->hora        = $this->cita->hora;
+            $this->estado      = $this->cita->estado;
+            $this->notas       = $this->cita->notas;
+        } else {
+            $this->isEdit = false;
+            $this->estado = 'pendiente';
+        }
+    }
+
+    protected function rules()
+    {
+        return [
+            'user_id'     => ['required','exists:users,id'],
+            'proyecto_id' => ['required','exists:proyectos,id'],
+            'fecha'       => ['required','date','after_or_equal:today'],
+            'hora'        => ['required','date_format:H:i'],
+            'estado'      => ['required','in:pendiente,confirmada,cancelada'],
+            'notas'       => ['nullable','string','max:2000'],
+        ];
     }
 
     public function save()
     {
-        $data = $this->validate([
-            'user_id' => ['required','exists:users,id'],
-            'proyecto_id' => ['nullable','exists:proyectos,id'],
-            'fecha'  => ['required','date'],
-            'hora'   => ['required'],
-            'estado' => ['required', Rule::in(['pendiente','confirmada','cancelada'])],
-            'telefono_contacto' => ['nullable','string','max:50'],
-            'notas'  => ['nullable','string','max:500'],
-        ]);
+        $data = $this->validate();
 
-        $data['nombre_usuario'] = $data['nombre_usuario'] ?? optional(User::find($data['user_id']))->name;
+        // Evitar choque proyecto-fecha-hora
+        $exists = Cita::where('proyecto_id',$data['proyecto_id'])
+            ->whereDate('fecha',$data['fecha'])
+            ->where('hora',$data['hora'])
+            ->when($this->isEdit && $this->cita, fn($q)=>$q->where('id','!=',$this->cita->id))
+            ->exists();
 
-        if ($this->cita) {
+        if ($exists) {
+            session()->flash('error','Ya existe una cita en ese proyecto, fecha y hora.');
+            return;
+        }
+
+        if ($this->isEdit && $this->cita) {
             $this->cita->update($data);
             session()->flash('success','Cita actualizada.');
         } else {

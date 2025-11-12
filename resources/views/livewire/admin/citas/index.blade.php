@@ -22,8 +22,15 @@
     style="flex:1;max-width:420px;border:1px solid #d1d5db;border-radius:10px;padding:.55rem .75rem;"
   >
   <div style="display:flex;gap:8px;">
-    <a href="{{ route('admin.citas.export.pdf', $qs) }}" …>Descargar PDF</a>
-    <a href="{{ route('admin.citas.create') }}" class="btn btn--primary">+ Nueva cita</a>
+    <button type="button" onclick="window.location.href='{{ route('admin.citas.export.pdf', $qs) }}'">
+  Descargar PDF
+</button>
+
+    <button type="button" onclick="window.location.href='{{ route('admin.citas.create') }}'">
+  Nueva cita
+</button>
+
+
   </div>
 </div>
 
@@ -55,7 +62,10 @@
             <td>{{ $c->usuario?->name ?? $c->nombre_usuario ?? '—' }}</td>
             <td>{{ $c->proyecto?->nombre ?? '—' }}</td>
             <td style="white-space:nowrap;display:flex;gap:.5rem;">
-              <a class="btn btn--blue" href="{{ route('admin.citas.edit',$c->id) }}">Editar</a>
+              <a href="{{ route('admin.citas.edit', ['citaId' => $c->id]) }}" class="btn btn-secondary">
+                Editar
+              </a>
+
               <button class="btn btn--danger" wire:click="confirmDelete({{ $c->id }})">Eliminar</button>
             </td>
           </tr>
